@@ -40,9 +40,12 @@ class backgroundSetter(object):
             gconf_client.set_string("/desktop/gnome/background/picture_filename",self._img)
 
         elif self._gnome_version == 3:
+            SCHEMA = 'org.gnome.desktop.background'
+            KEY = 'picture-uri'
             from gi.repository import Gio
-            print('not yet implemented')
-            sys.exit(2)
+            gs = Gio.Settings.new(SCHEMA)
+            gs.set_string(KEY, 'file://%s' % self._img)
+            gs.apply()
         else:
             print 'Only works for Gnome desktop right now'
             sys.exit(64)
