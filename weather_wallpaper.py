@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-'''This program downloads weather satellite map and changes desktop wall
+'''This program downloads weather satellite map and sets it as desktop wall
 paper(cron it for timely). Works for Gnome 2 and 3.  Japanese Meteorological
-Agency(JMA) is the relevant source for me where I live but You can adopt by
+Agency(JMA) is the relevant source for me where I live but you can adopt by
 changing source.
 '''
 
