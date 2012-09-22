@@ -9,7 +9,7 @@ AUTHOR = "Yagnesh Raghava Yakkala"
 WEBSITE = "http://yagnesh.org"
 LICENSE ="GPL v3 or later"
 
-import sys
+import sys, os
 
 class backgroundSetter(object):
     """set the background, based on system gnome version
@@ -50,14 +50,46 @@ class backgroundSetter(object):
             print 'Only works for Gnome desktop right now'
             sys.exit(64)
 
+class mapDownloader(object):
+    def __init__(self, site):
+        """ download the map.
+
+        Arguments:
+        - `site`: source of maps
+        """
+        self._site = site
+        self.url = self.construct_url()
+
+    def construct_url(self):
+        from time import strftime,localtime
+
+        # JMA
+        # eg url: http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
+        if self._site == "jma":
+            url_base = "http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/"
+            file_base = strftime("%Y%m%d%H")
+            if localtime().tm_min <= 45:
+                file_tail = "00-00.png"
+            else:
+                file_tail = "15-00.png"
+            self.file_name = file_base + file_tail
+            return(url_base + self.file_name)
+        else:
+            exit(64)
+
+    def download_map(self):
+        import urllib
+        urllib.urlretrieve(self.url,self.file_name,None)
+
 def main():
-    # current = mapDownloader()
-    # bg = backgroundSetter(current.img)
-    bg = backgroundSetter("/home/yagnesh/git/weather_wallpaper/201209201015-00.png")
+    current_map = mapDownloader("jma")
+    current_map.download_map()
+
+    bg = backgroundSetter(os.path.abspath(current_map.file_name))
     bg.change_background()
 
-#client.set_string("/desktop/gnome/background/picture_filename","home/tsudot/Pictures/zombie.jpg")
-#http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
+
+
 
 if __name__ == '__main__':
     main()
