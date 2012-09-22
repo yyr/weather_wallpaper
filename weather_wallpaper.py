@@ -79,15 +79,18 @@ class mapDownloader(object):
 
     def download_map(self):
         import urllib
-        urllib.urlretrieve(self.url,self.file_name,None)
+        p, status = urllib.urlretrieve(self.url,self.file_name,None)
+        return(status)
 
 def main():
     current_map = mapDownloader()
-    current_map.download_map()
+    if current_map.download_map():
+        bg = backgroundSetter(os.path.abspath(current_map.file_name))
+        bg.change_background()
+    else:
+        print "map is downloaded"
 
-    bg = backgroundSetter(os.path.abspath(current_map.file_name))
-    bg.change_background()
-
+    #os.remove(current_map.file_name)
 
 if __name__ == '__main__':
     main()
