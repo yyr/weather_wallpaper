@@ -9,17 +9,17 @@ AUTHOR = "Yagnesh Raghava Yakkala"
 WEBSITE = "http://yagnesh.org"
 LICENSE ="GPL v3 or later"
 
+# customization:
+MAP_SOURCE = "jma"
+
+
+# code
 import sys, os
 
 class backgroundSetter(object):
     """set the background, based on system gnome version
     """
-    SCHEMA = 'org.gnome.desktop.background'
-    KEY = 'picture-uri'
-
     def __init__(self,img):
-        """
-        """
         self._img = img
         from os import path
         if path.exists("/usr/share/gnome-about/gnome-version.xml"):
@@ -51,7 +51,7 @@ class backgroundSetter(object):
             sys.exit(64)
 
 class mapDownloader(object):
-    def __init__(self, site):
+    def __init__(self, site=MAP_SOURCE):
         """ download the map.
 
         Arguments:
@@ -82,13 +82,11 @@ class mapDownloader(object):
         urllib.urlretrieve(self.url,self.file_name,None)
 
 def main():
-    current_map = mapDownloader("jma")
+    current_map = mapDownloader()
     current_map.download_map()
 
     bg = backgroundSetter(os.path.abspath(current_map.file_name))
     bg.change_background()
-
-
 
 
 if __name__ == '__main__':
