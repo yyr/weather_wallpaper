@@ -1,6 +1,6 @@
 ** About
-Download weather satellite map and set it as desktop wall paper every half an
-hour (or given interval). Works for Gnome.
+Download satellite weather map from given source (eg. JMA) and set it as
+desktop wall paper. Works for Gnome Desktop.
 
 ** License
  GPL v3 (or later)
