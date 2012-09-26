@@ -88,9 +88,9 @@ def main():
         bg = backgroundSetter(os.path.abspath(current_map.file_name))
         bg.change_background()
     else:
-        print "map is downloaded"
+        print "failed to download weather map"
 
-    #os.remove(current_map.file_name)
+    os.remove(current_map.file_name)
 
 if __name__ == '__main__':
     main()
