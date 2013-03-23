@@ -9,12 +9,42 @@ AUTHOR = "Yagnesh Raghava Yakkala"
 WEBSITE = "http://yagnesh.org"
 LICENSE ="GPL v3 or later"
 
-# customization:
-MAP_SOURCE = "jma"
-
-
-# code
 import sys, os
+
+class mapDownloader(object):
+    """Dummy parent class for map server"""
+    def map_url(self):
+        pass
+
+    def download_map(self):
+        pass
+
+class JMA(mapDownloader):
+    def __init__(self,):
+        # eg url: http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
+        self._url_root = "http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/"
+        self.url = self.map_url('latest')
+
+    def map_url(self,at_time):
+        """Hours JMA updates hourly twice. """
+        from time import strftime,localtime
+
+        if at_time == 'latest':
+            file_base = strftime("%Y%m%d%H")
+            if localtime().tm_min <= 45:
+                file_tail = "00-00.png"
+            else:
+                file_tail = "15-00.png"
+            self.file_name = file_base + file_tail
+            return(self._url_root + self.file_name)
+        else:
+            return None
+
+    def download_map(self):
+        import urllib
+        p, status = urllib.urlretrieve(self.url,self.file_name,None)
+        return(status)
+
 
 class backgroundSetter(object):
     """set the background, based on system gnome version
@@ -47,50 +77,26 @@ class backgroundSetter(object):
             gs.set_string(KEY, 'file://%s' % self._img)
             gs.apply()
         else:
-            print 'Only works for Gnome desktop right now'
+            print('Only works for Gnome desktop right now')
             sys.exit(64)
 
-class mapDownloader(object):
-    def __init__(self, site=MAP_SOURCE):
-        """ download the map.
 
-        Arguments:
-        - `site`: source of maps
-        """
-        self._site = site
-        self.url = self.construct_url()
 
-    def construct_url(self):
-        from time import strftime,localtime
-
-        # JMA
-        # eg url: http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
-        if self._site == "jma":
-            url_base = "http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/"
-            file_base = strftime("%Y%m%d%H")
-            if localtime().tm_min <= 45:
-                file_tail = "00-00.png"
-            else:
-                file_tail = "15-00.png"
-            self.file_name = file_base + file_tail
-            return(url_base + self.file_name)
-        else:
-            exit(64)
-
-    def download_map(self):
-        import urllib
-        p, status = urllib.urlretrieve(self.url,self.file_name,None)
-        return(status)
-
-def main():
-    current_map = mapDownloader()
+def arg_parse(server = 'JMA'):
+    current_map = globals()[server]()
     if current_map.download_map():
         bg = backgroundSetter(os.path.abspath(current_map.file_name))
         bg.change_background()
     else:
         print "failed to download weather map"
 
-    os.remove(current_map.file_name)
+def main(args=None):
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s','--server', dest='server',choices=['JMA'],
+                        default='JMA')
+    arg_parse(**vars(parser.parse_args(args)))
+
 
 if __name__ == '__main__':
     main()
