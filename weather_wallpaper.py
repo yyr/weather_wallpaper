@@ -19,10 +19,11 @@ class mapDownloader(object):
         pass
 
 class JMA(mapDownloader):
-    def __init__(self,):
+    def __init__(self,at_time='latest'):
         # eg url: http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
         self._url_root = "http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/"
-        self.url = self.map_url('latest')
+        self._at_time = at_time
+        self.url = self.map_url(self._at_time)
 
     def map_url(self,at_time):
         """Hours JMA updates hourly twice. """
@@ -80,20 +81,25 @@ class backgroundSetter(object):
             sys.exit(64)
 
 
-
-def arg_parse(server = 'JMA'):
-    current_map = globals()[server]()
+def arg_parse(at_time, server = 'JMA',):
+    current_map = globals()[server](at_time)
     if current_map.download_map():
         bg = backgroundSetter(os.path.abspath(current_map.file_name))
         bg.change_background()
     else:
-        print "failed to download weather map"
+        print("failed to download weather map")
+
 
 def main(args=None):
     import argparse
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description=__doc__)
     parser.add_argument('-s','--server', dest='server',choices=['JMA'],
                         default='JMA')
+    parser.add_argument('-t','--at-time', help='Where AT_TIME=YYYY-MM-DD-HH'
+                        ,default='latest')
+
     arg_parse(**vars(parser.parse_args(args)))
 
 
