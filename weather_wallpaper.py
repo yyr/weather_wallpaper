@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 '''This program downloads satellite weather map from a server (JMA currently)
-and sets it as desktop wall paper (suitable to put in a cron job). Works for
-Gnome 2 and 3.  Japanese Meteorological Agency (JMA) is the relevant source
-for me where I live but can be extended for other servers easily.'''
+and sets it as desktop wall paper (for timely update put it in a cron
+job). Works for Gnome 2 and 3.  Japanese Meteorological Agency (JMA) is the
+relevant source for me where I live but can be extended for other servers
+easily.
+'''
 
 AUTHOR = "Yagnesh Raghava Yakkala"
 WEBSITE = "http://yagnesh.org"
