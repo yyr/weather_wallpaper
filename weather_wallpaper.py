@@ -1,10 +1,20 @@
 #!/usr/bin/env python
-'''This program downloads satellite weather map from a server (JMA currently)
-and sets it as desktop wall paper (for timely update put it in a cron
-job). Works for Gnome 2 and 3.  Japanese Meteorological Agency (JMA) is the
-relevant source for me where I live but can be extended for other servers
-easily.
-'''
+# [[[cog import cog; cog.out('"""\n{0}\n"""'.format(file('./README.rst').read()))]]]
+"""
+Weather Wallpaper
+=================
+
+Tiny python script to update wallpaper with satellite weather map from a
+server (JMA currently). Works for Gnome 2 and 3.  Japanese Meteorological
+Agency (JMA) is the relevant server for me. It can be extended for other
+servers as well.
+
+License
+=======
+GPL v3 (or later)
+
+"""
+# [[[end]]]
 
 AUTHOR = "Yagnesh Raghava Yakkala"
 WEBSITE = "http://yagnesh.org"
