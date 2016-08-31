@@ -74,7 +74,7 @@ class backgroundSetter(object):
             try:
                 import gconf
             except:
-                print  'You need to install the python bindings for gconf'
+                print('You need to install the python bindings for gconf')
                 sys.exit(4)
 
             gconf_client = gconf.client_get_default()
@@ -93,13 +93,14 @@ class backgroundSetter(object):
             sys.exit(64)
 
 
-def arg_parse(at_time, server = 'JMA',):
+def arg_parse(at_time, server, log=None, log_level=None):
     current_map = globals()[server](at_time)
+
     if current_map.download_map():
         bg = backgroundSetter(os.path.abspath(current_map.file_name))
         bg.change_background()
     else:
-        print("failed to download weather map")
+        print("Failed to download weather map")
 
 
 def main(args=None):
@@ -111,6 +112,10 @@ def main(args=None):
                         default='JMA')
     parser.add_argument('-t','--at-time', help='Where AT_TIME=YYYY-MM-DD-HH'
                         ,default='latest')
+    parser.add_argument('--log', help='log file.')
+    parser.add_argument('--log-level',
+        choices=['WARN', 'INFO'],
+        help='Logging level for log file.')
 
     arg_parse(**vars(parser.parse_args(args)))
 
