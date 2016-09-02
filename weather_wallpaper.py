@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # [[[cog import cog; cog.out('"""\n{0}\n"""'.format(file('./README.rst').read()))]]]
+
 """
 Weather Wallpaper
 =================
 
 Tiny python script to update wallpaper with satellite weather map from a
-server (JMA currently). Works for Gnome 2 and 3.  Japanese Meteorological
-Agency (JMA) is the relevant server for me. It can be extended for other
-servers as well.
+server (IMD and JMA currently). Works for Gnome 2 and 3.  Indian
+Meteorological Department (IMD) is the relevant server for me. It can be
+extended for other servers as well.
+
 
 License
 =======
@@ -128,7 +130,7 @@ def main(args=None):
         formatter_class=argparse.RawTextHelpFormatter,
         description=__doc__)
     parser.add_argument('-s','--server', dest='server',choices=['JMA', 'IMD'],
-                        default='JMA')
+                        default='IMD')
     parser.add_argument('-t','--at-time', help='Where AT_TIME=YYYY-MM-DD-HH'
                         ,default='latest')
     parser.add_argument('--log', help='log file.')
