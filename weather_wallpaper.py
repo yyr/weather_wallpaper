@@ -28,19 +28,23 @@ class mapDownloader(object):
         pass
 
     def download_map(self):
-        pass
+        import urllib
+        p, status = urllib.urlretrieve(self.url,self.file_name,None)
+        return(status)
+
 
 class JMA(mapDownloader):
     def __init__(self,at_time='latest'):
-        # eg url: http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/201209201015-00.png
         self._url_root = "http://www.jma.go.jp/jp/gms/imgs_c/0/infrared/1/"
         self._at_time = at_time
         self.url = self.map_url(self._at_time)
 
     def map_url(self,at_time):
-        """Hours JMA updates hourly twice. """
-        from time import strftime,localtime
+        """Construct url with given time, if at_time is 'latest' construct url for
+        latest image. JMA updates hourly twice.
 
+        """
+        from time import strftime, localtime
         if at_time == 'latest':
             file_base = strftime("%Y%m%d%H")
             if localtime().tm_min <= 45:
@@ -52,10 +56,25 @@ class JMA(mapDownloader):
         else:
             return None
 
-    def download_map(self):
-        import urllib
-        p, status = urllib.urlretrieve(self.url,self.file_name,None)
-        return(status)
+
+
+class IMD(mapDownloader):
+    """Images from Indian Meteorological Department(IMD) site"""
+    def __init__(self,at_time='latest'):
+        self._url_root = 'http://satellite.imd.gov.in/img/'
+        self._at_time  = at_time
+        self.url = self.map_url(self._at_time)
+        self.file_name = "3Dasiasec_ir1.jpg"
+
+    def map_url(self, at_time):
+        """IMD only keeps latest images."""
+        if not at_time == 'latest':
+            print('IMD only keeps latest images.')
+            sys.exit(2)
+        else:
+            return('http://satellite.imd.gov.in/img/3Dasiasec_ir1.jpg')
+
+
 
 
 class backgroundSetter(object):
@@ -108,7 +127,7 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description=__doc__)
-    parser.add_argument('-s','--server', dest='server',choices=['JMA'],
+    parser.add_argument('-s','--server', dest='server',choices=['JMA', 'IMD'],
                         default='JMA')
     parser.add_argument('-t','--at-time', help='Where AT_TIME=YYYY-MM-DD-HH'
                         ,default='latest')
